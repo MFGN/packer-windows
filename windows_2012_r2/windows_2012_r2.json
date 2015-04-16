@@ -17,22 +17,22 @@
       "guest_os_type": "windows8srv-64",
       "disk_size": 40960,
       "floppy_files":
-	  [
+      [
         "windows_2012_r2/Autounattend.xml",
         "scripts/init.bat",
-		"scripts/network-location.ps1",
-		"scripts/microsoft-updates.bat",
-		"scripts/win-updates.ps1",
+        "scripts/network-location.ps1",
+        "scripts/microsoft-updates.bat",
+        "scripts/win-updates.ps1",
         "scripts/winrm-tools.ps1"        
       ],
       "vmdk_name": "windows_2012_r2",
       "vmx_data":
-	  {
+      {
         "memsize": "4096",
         "numvcpus": "2",
-		"cpuid.coresPerSocket": "1",
+        "cpuid.coresPerSocket": "1",
         "scsi0.virtualDev": "lsisas1068"
-	  }
+      }
     }
   ],
   "provisioners":
@@ -40,16 +40,16 @@
     {
       "type": "powershell",
       "scripts":
-	  [
+      [
         "scripts/install-vmhost-additions.ps1"
       ]
     },  
     {
       "type": "windows-shell",
       "scripts":
-	  [	  
+      [   
         "scripts/quirks.bat",
-		"scripts/border-width.bat",
+        "scripts/border-width.bat",
         "scripts/rdp.bat",
         "scripts/no-auto-login.bat"
       ],
@@ -61,7 +61,7 @@
     {
       "type": "vagrant",
       "keep_input_artifact": false,
-	  "compression_level": 2,
+      "compression_level": 2,
       "output": "{{.Provider}}_windows_2012_r2.box",
       "vagrantfile_template": "windows_2012_r2/Vagrantfile.template"
     }
