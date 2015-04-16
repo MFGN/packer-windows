@@ -1,0 +1,75 @@
+{
+  "builders":
+  [
+    {
+      "type": "vmware-windows-iso",
+      "vm_name": "windows_8-1_ent",
+      "iso_url": "iso/windows_8-1_ent.iso",
+      "iso_checksum_type": "md5",
+      "iso_checksum": "8E194185FCCE4EA737F274EE9005DDF0",
+      "headless": false,
+      "boot_wait": "5m",
+      "winrm_username": "vagrant",
+      "winrm_password": "vagrant",
+      "winrm_wait_timeout": "3h",
+      "shutdown_timeout": "1h",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "guest_os_type": "windows8srv-64",
+      "disk_size": 40960,
+	  "vnc_port_min": 5900,
+	  "vnc_port_max": 5980,
+      "floppy_files":
+	  [
+        "windows_8-1_ent/Autounattend.xml",
+        "scripts/init.bat",
+		"scripts/network-location.ps1",
+		"scripts/microsoft-updates.bat",
+		"scripts/win-updates.ps1",
+        "scripts/winrm-tools.ps1"        
+      ],
+      "vmdk_name": "windows_8-1_ent",
+      "vmx_data":
+	  {
+		"RemoteDisplay.vnc.enabled": "false",
+		"RemoteDisplay.vnc.port": "5900",  
+        "memsize": "4096",
+        "numvcpus": "2",
+		"cpuid.coresPerSocket": "1",
+        "scsi0.virtualDev": "lsisas1068"
+	  }
+    }
+  ],
+  "provisioners":
+  [
+    {
+      "type": "powershell",
+      "scripts":
+	  [
+        "scripts/install-vmhost-additions.ps1"
+      ]
+    },  
+    {
+      "type": "windows-shell",
+      "scripts":
+	  [	  
+        "scripts/quirks.bat",
+		"scripts/chocolatey.ps1",
+		"scripts/remove-metroapps.ps1",
+		"scripts/border-width.bat",
+        "scripts/rdp.bat",
+        "scripts/no-auto-login.bat"
+      ],
+      "pause_before": "3m"
+    }
+  ],  
+  "post-processors":
+  [
+    {
+      "type": "vagrant",
+      "keep_input_artifact": false,
+	  "compression_level": 2,
+      "output": "{{.Provider}}_windows_8-1_ent.box",
+      "vagrantfile_template": "windows_8-1_ent/Vagrantfile.template"
+    }
+  ]
+}
