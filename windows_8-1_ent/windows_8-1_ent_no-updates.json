@@ -51,7 +51,7 @@
       "type": "powershell",
       "scripts":
       [  
-		"scripts/registry-tweaks.ps1",
+        "scripts/registry-tweaks.ps1",
         "scripts/border-width.ps1",
         "scripts/RDP.ps1",
         "scripts/no-auto-login.ps1",
