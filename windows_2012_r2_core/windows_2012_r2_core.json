@@ -1,7 +1,7 @@
 {
   "builders": [
     {
-      "type": "vmware-iso",
+      "type": "vmware-windows-iso",
       "vm_name": "windows_2012_r2",
       "iso_url": "iso/Windows Server2012r2.iso",
       "iso_checksum_type": "md5",
@@ -64,6 +64,11 @@
       "compression_level": 0,
       "output": "{{.Provider}}_windows_2012_r2_core.box",
       "vagrantfile_template": "windows_2012_r2_core/Vagrantfile.template"
+    },
+	{
+      "type": "vagrant-vmware-ovf",
+      "compression_level": 2,
+      "output": "{{.Provider}}_windows_2012_r2_core_ovf.box",
     }
   ]
 }

@@ -11,7 +11,7 @@
       "boot_wait": "5m",
       "winrm_username": "vagrant",
       "winrm_password": "vagrant",
-      "winrm_wait_timeout": "3h",
+      "winrm_timeout": "3h",
       "shutdown_timeout": "1h",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "guest_os_type": "windows8srv-64",
