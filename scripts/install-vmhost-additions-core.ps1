@@ -20,6 +20,7 @@ if (Test-Path $iso_path)
   cmd /c "${drive}:\setup64.exe /S /v`"/qn REBOOT=ReallySuppress ADDLOCAL=ALL`" /l C:\Windows\Logs\vmware-tools.log"
   Write-Host "Dismounting ISO"
   Dismount-DiskImage -ImagePath $image.ImagePath
+  exit 1
   #Start-Sleep 30
 }
 else
