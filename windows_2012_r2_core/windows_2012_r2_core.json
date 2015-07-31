@@ -1,7 +1,7 @@
 {
   "builders": [
     {
-      "type": "vmware-windows-iso",
+      "type": "vmware-iso",
       "vm_name": "windows_2012_r2",
       "iso_url": "iso/Windows Server2012r2.iso",
       "iso_checksum_type": "md5",
@@ -10,7 +10,7 @@
       "boot_wait": "5m",
       "winrm_username": "vagrant",
       "winrm_password": "vagrant",
-      "winrm_wait_timeout": "6h",
+      "winrm_timeout": "6h",
       "shutdown_timeout": "1h",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "guest_os_type": "windows8srv-64",
