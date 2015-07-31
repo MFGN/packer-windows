@@ -44,23 +44,14 @@
       "type": "powershell",
       "scripts":
       [
-        "scripts/install-vmhost-additions.ps1"
-      ],
-      "pause_before": "3m"
-    },  
-    {
-      "type": "powershell",
-      "scripts":
-      [   
-        "scripts/registry-tweaks.ps1",
-        "scripts/border-width.ps1",
-        "scripts/RDP.ps1",
+        "scripts/install-vmhost-additions.ps1",
+		"scripts/RDP.ps1",
         "scripts/no-auto-login.ps1",
         "scripts/final-tweaks.ps1"
       ],
-      "pause_before": "3m"
+      "pause_before": "1m"
     }
-  ], 
+  ],  
   "post-processors":
   [
     {
