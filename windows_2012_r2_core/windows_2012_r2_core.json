@@ -1,5 +1,6 @@
 {
-  "builders": [
+  "builders":
+  [
     {
       "type": "vmware-windows-iso",
       "vm_name": "windows_2012_r2",
@@ -10,7 +11,7 @@
       "boot_wait": "5m",
       "winrm_username": "vagrant",
       "winrm_password": "vagrant",
-      "winrm_timeout": "6h",
+      "winrm_wait_timeout": "6h",
       "shutdown_timeout": "1h",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "guest_os_type": "windows8srv-64",
@@ -64,11 +65,6 @@
       "compression_level": 0,
       "output": "{{.Provider}}_windows_2012_r2_core.box",
       "vagrantfile_template": "windows_2012_r2_core/Vagrantfile.template"
-    },
-	{
-      "type": "vagrant-vmware-ovf",
-      "compression_level": 2,
-      "output": "{{.Provider}}_windows_2012_r2_core_ovf.box",
     }
   ]
 }
