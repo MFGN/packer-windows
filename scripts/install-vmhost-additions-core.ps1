@@ -4,14 +4,13 @@ $iso_path = 'C:\Users\vagrant\windows.iso'
 (New-Object System.Net.WebClient).DownloadFile($source,$iso_path)
 Start-Sleep 10
 
-if (Test-Path $iso_path)
-{
+if (Test-Path $iso_path) {
   Write-Host "Mounting ISO $iso_path"
-  $image = Mount-DiskImage $iso_path -PassThru
-  if (! $?)
-  {
-    Write-Error "ERROR $LastExitCode while mounting VMWare Guest Additions"
-    Start-Sleep 10
+  try {
+    $image = Mount-DiskImage $iso_path -PassThru
+  }
+  catch {
+    Write-Host "ERROR $LastExitCode while mounting VMWare Guest Additions"
     exit 2
   }
   $drive = (Get-Volume -DiskImage $image).DriveLetter
@@ -20,11 +19,11 @@ if (Test-Path $iso_path)
   cmd /c "${drive}:\setup64.exe /S /v`"/qn REBOOT=ReallySuppress ADDLOCAL=ALL`" /l C:\Windows\Logs\vmware-tools.log"
   Write-Host "Dismounting ISO"
   Dismount-DiskImage -ImagePath $image.ImagePath
-  exit 1
-  #Start-Sleep 30
+  Restart-Computer -Force
+  exit 0
 }
-else
-{
-  ipconfig | select-string IPv4
+else {
+  Write-Host $(Get-NetAdapter -Physical | Get-NetIPAddress -AddressFamily IPv4).IPAddress
   Write-Host "ISO was not loaded [$iso_path], nothing will happen"
+  exit 1
 }

@@ -7,8 +7,8 @@
       "iso_url": "iso/Windows Server2012r2.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
-      "headless": true,
-      "boot_wait": "5m",
+      "headless": false,
+      "boot_wait": "2m",
       "winrm_username": "vagrant",
       "winrm_password": "vagrant",
       "winrm_wait_timeout": "6h",
@@ -22,7 +22,7 @@
         "scripts/init.bat",
         "scripts/network-location.ps1",
         "scripts/microsoft-updates.bat",
-        "scripts/winrm-tools.ps1"        
+        "scripts/winrm-tools.ps1"
       ],
       "vmdk_name": "windows_2012_r2_core",
       "vmx_data":
@@ -38,29 +38,18 @@
   [
     {
       "type": "powershell",
-	  "elevated_user": "Administrator",
-	  "elevated_password": "vagrant",
-	  "execute_command": "& { {{.Path}} }; exit $LastExitCode",
+	    "elevated_user": "Administrator",
+	    "elevated_password": "vagrant",
+	    "execute_command": "& { {{.Path}} }; exit $LastExitCode",
       "scripts":
       [
-        "scripts/install-vmhost-additions.ps1"
-      ],
-      "pause_before": "1m"
-    },  
-    {
-      "type": "powershell",
-	  "elevated_user": "Administrator",
-	  "elevated_password": "vagrant",
-	  "execute_command": "& { {{.Path}} }; exit $LastExitCode",
-      "scripts":
-      [   
+        "scripts/install-vmhost-additions-core.ps1",
         "scripts/RDP.ps1",
         "scripts/no-auto-login.ps1",
         "scripts/final-tweaks.ps1"
-      ],
-      "pause_before": "2m"
+      ]
     }
-  ], 
+  ],
   "post-processors":
   [
     {
