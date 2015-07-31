@@ -38,14 +38,27 @@
   [
     {
       "type": "powershell",
+	  "elevated_user": "Administrator",
+	  "elevated_password": "vagrant",
+	  "execute_command": "& { {{.Path}} }; exit $LastExitCode",
       "scripts":
       [
-        "scripts/install-vmhost-additions.ps1",
-		"scripts/RDP.ps1",
+        "scripts/install-vmhost-additions.ps1"
+      ],
+      "pause_before": "1m"
+    },  
+    {
+      "type": "powershell",
+	  "elevated_user": "Administrator",
+	  "elevated_password": "vagrant",
+	  "execute_command": "& { {{.Path}} }; exit $LastExitCode",
+      "scripts":
+      [   
+        "scripts/RDP.ps1",
         "scripts/no-auto-login.ps1",
         "scripts/final-tweaks.ps1"
       ],
-      "pause_before": "1m"
+      "pause_before": "2m"
     }
   ], 
   "post-processors":
