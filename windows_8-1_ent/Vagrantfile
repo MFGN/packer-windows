@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_version ">= 1.6.2"
+
+VAGRANT_INSTANCE_NAME = "win81-nopatch"
+
+Vagrant.configure("2") do |config|
+	config.vm.hostname = VAGRANT_INSTANCE_NAME
+	config.vm.define VAGRANT_INSTANCE_NAME do |d|
+	end
+    config.vm.box = "win81/noupdates"
+    config.vm.guest = :windows
+	config.vm.communicator = "winrm"
+    
+	config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true
+
+    # Admin user name and password
+    config.winrm.username = "vagrant"
+    config.winrm.password = "vagrant"
+
+    config.vm.provider :vmware_workstation do |v, override|
+        v.gui = true
+		v.vmx["displayname"] = VAGRANT_INSTANCE_NAME
+		v.vmx["memsize"] = "2048"
+		v.vmx["numvcpus"] = "2"
+		v.vmx["cpuid.coresPerSocket"] = "1"
+		v.vmx["ethernet0.virtualDev"] = "vmxnet3"
+		v.vmx["ethernet1.virtualDev"] = "vmxnet3"
+		#v.vmx["ethernet1.present"] = "FALSE"
+		v.vmx["RemoteDisplay.vnc.enabled"] = "false"
+		v.vmx["RemoteDisplay.vnc.port"] = "5900"
+		v.vmx["scsi0.virtualDev"] = "lsisas1068"
+    end
+	
+	config.vm.provision :shell, inline: 'shutdown /s /t 10 /f /d p:4:1 /c \"Vagrant Shutdown\"'
+end

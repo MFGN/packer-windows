@@ -8,12 +8,6 @@ boxes/*
 /website/docs/.vagrant
 /website/www/.vagrant
 /vagrant-spec.config.rb
-*.box
-/iso
-
-# Windows stuff
-Autounattend.xml
-mongoose*
 
 # Bundler/Rubygems
 *.gem
