@@ -1,65 +1,64 @@
 {
-  "variables":
-  {
-    "version": "1"
+  "variables": {
+    "build_vm_name": "windows_2012_r2_core",
+    "version": "2.2"
   },
-  "builders":
-  [
+  "builders": [
     {
       "type": "vmware-windows-iso",
-      "vm_name": "windows_2012_r2_core",
+      "vm_name": "{{user `build_vm_name`}}",
       "iso_url": "iso/Windows Server2012r2.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
       "headless": true,
-      "boot_wait": "2m",
+      "boot_wait": "6m",
       "winrm_username": "vagrant",
       "winrm_password": "vagrant",
-      "winrm_wait_timeout": "6h",
+      "winrm_wait_timeout": "2h",
       "shutdown_timeout": "1h",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "guest_os_type": "windows8srv-64",
+      "tools_upload_flavor": "windows",
       "disk_size": 32768,
-      "floppy_files":
-      [
+      "floppy_files": [
+        "files/pvscsi/*",
+        "files/vmxnet3/*",
         "windows_2012_r2_core/Autounattend.xml",
         "scripts/init.bat",
-        "scripts/network-location.ps1",
         "scripts/microsoft-updates.bat",
         "scripts/winrm-tools.ps1"
       ],
       "vmdk_name": "windows_2012_r2_core",
-      "vmx_data":
-      {
+      "vmx_data": {
         "memsize": "2048",
         "numvcpus": "2",
         "cpuid.coresPerSocket": "1",
-        "scsi0.virtualDev": "lsisas1068"
+        "scsi0.virtualDev": "pvscsi",
+        "ethernet0.virtualdev" : "vmxnet3",
+        "virtualhw.productcompatibility" : "esx",
+        "virtualhw.version" : "10"
       }
     }
   ],
-  "provisioners":
-  [
+  "provisioners": [
     {
       "type": "powershell",
 	    "elevated_user": "Administrator",
 	    "elevated_password": "vagrant",
-	    "scripts":
-      [
-        "scripts/install-vmhost-additions-core.ps1",
+      "scripts": [
+        "scripts/install-vmware-tools.ps1",
         "scripts/RDP.ps1",
         "scripts/no-auto-login.ps1",
         "scripts/final-tweaks.ps1"
       ]
     }
   ],
-  "post-processors":
-  [
+  "post-processors": [
     {
-      "type": "vagrant",
+      "type": "vagrant-vmware-ovf",
       "keep_input_artifact": false,
       "compression_level": 0,
-      "output": "{{.BuildName}}-{{.Provider}}-{{user `version`}}.box"
+      "output": "{{user `build_vm_name`}}-{{.Provider}}-{{user `version`}}.box"
     }
   ]
 }
