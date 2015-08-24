@@ -1,6 +1,8 @@
 {
   "variables": {
     "build_vm_name": "windows_2012_r2_core",
+    "iso_url": "http://192.168.220.1:8080/iso/windows.iso",
+    "temp_user": "vagrant",
     "version": "2.2"
   },
   "builders": [
@@ -13,8 +15,8 @@
       "headless": false,
       "boot_wait": "6m",
       "output_directory": "builds/{{user `build_vm_name`}}",
-      "winrm_username": "vagrant",
-      "winrm_password": "vagrant",
+      "winrm_username": "{{user `temp_user`}}",
+      "winrm_password": "{{user `temp_user`}}",
       "winrm_wait_timeout": "2h",
       "shutdown_timeout": "1h",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
@@ -43,14 +45,9 @@
   "provisioners": [
     {
       "type": "powershell",
-	    "elevated_user": "Administrator",
-	    "elevated_password": "vagrant",
-      "scripts": [
-        "scripts/install-vmware-tools.ps1",
-        "scripts/RDP.ps1",
-        "scripts/no-auto-login.ps1",
-        "scripts/final-tweaks.ps1"
-      ]
+      "remote_path": "/tmp/install-vmware-tools.ps1",
+      "script": "scripts/install-vmware-tools.ps1",
+      "execute_command": "install-vmware-tools.ps1 -user {{user `temp_user`}} -iso_url {{user `iso_url`}}"
     }
   ],
   "post-processors": [

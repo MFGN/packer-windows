@@ -43,6 +43,14 @@
   "provisioners": [
     {
       "type": "powershell",
+	    "elevated_user": "vagrant",
+	    "elevated_password": "vagrant",
+      "scripts": [
+        "scripts/install-vmware-tools.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
 	    "elevated_user": "Administrator",
 	    "elevated_password": "vagrant",
       "scripts": [
