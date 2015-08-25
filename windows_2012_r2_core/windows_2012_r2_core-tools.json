@@ -1,15 +1,15 @@
 {
   "variables": {
     "build_name": "windows_2012_r2",
-    "tools_iso_url": "http://192.168.220.1:8080/iso/windows.iso",
+    "project_url": "http://192.168.220.1:8080",
     "temp_user": "vagrant",
     "temp_pass": "vagrant",
     "version": "2.2"
   },
   "builders": [
     {
-      "name": "standard",  
-      "vm_name": "{{user `build_name`}}",  
+      "name": "standard",
+      "vm_name": "{{user `build_name`}}",
       "type": "vmware-windows-iso",
       "iso_url": "iso/Windows Server2012r2.iso",
       "iso_checksum_type": "md5",
@@ -43,8 +43,8 @@
       }
     },
     {
-      "name": "core",  
-      "vm_name": "{{user `build_name`}}_core",  
+      "name": "core",
+      "vm_name": "{{user `build_name`}}_core",
       "type": "vmware-windows-iso",
       "iso_url": "iso/Windows Server2012r2.iso",
       "iso_checksum_type": "md5",
@@ -80,12 +80,16 @@
   ],
   "provisioners": [
     {
-      "type": "powershell",
-      "inline": ["((New-Object System.Net.WebClient).DownloadFile(\"{{user `tools_iso_url`}}\", \"c:\\users\\{{user `temp_user`}}\\windows.iso\"))"]
+      "type": "windows-restart"
     },
     {
       "type": "powershell",
-      "execute_command": "powershell.exe -ExecutionPolicy Bypass -Command \"& {{.Path}} -user {{user `temp_user`}} \"",
+      "inline": ["((New-Object System.Net.WebClient).DownloadFile(\"{{user `project_url`}}/iso/windows.iso\", \"c:\\users\\{{user `temp_user`}}\\windows.iso\"))"]
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `temp_user`}}",
+      "elevated_password": "{{user `temp_pass`}}",
       "script": "scripts/install-vmware-tools-test.ps1"
     },
     {
@@ -109,4 +113,3 @@
     }
   ]
 }
-

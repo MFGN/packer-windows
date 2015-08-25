@@ -12,6 +12,7 @@ boxes/*
 /builds
 *.box
 /iso
+crash.log
 
 # Windows stuff
 Autounattend.xml
