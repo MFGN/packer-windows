@@ -14,11 +14,11 @@ if (Test-Path $iso_path) {
         $error[0].Exception
     }
     if ($image_mount) {
-        $drive_letter = ((Get-Volume -DiskImage $image_mount).DriveLetter)+':\'
+        $drive_letter = ((Get-Volume -DiskImage $image_mount).DriveLetter)+':'
         Push-Location $drive_letter
         Write-Host "VMware Tools | Start installation: $(Get-Date -Format T)"
         #$installation_process = Start-Process -FilePath '.\setup.exe' -ArgumentList '/S /v "/qn REBOOT=R ADDLOCAL=ALL"' -PassThru
-        $installation_args = "$($drive_letter)setup.exe /S /v '/qn REBOOT=R ADDLOCAL=ALL'"
+        $installation_args = "$($drive_letter)\setup.exe /S /v ""/qn REBOOT=R ADDLOCAL=ALL"""
         $installation_process = Start-Process 'powershell.exe' -ArgumentList $installation_args -PassThru
         while (!($installation_process.HasExited)) {
             Start-Sleep -Seconds 5
