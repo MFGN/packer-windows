@@ -62,3 +62,5 @@
     }
   ]
 }
+
+#"inline": ["((New-Object System.Net.WebClient).DownloadFile(\"{{user `tools_iso_url`}}\", \"c:\\users\\{{user `temp_user`}}\\windows.iso\"))"]

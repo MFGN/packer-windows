@@ -1,38 +1,74 @@
 {
   "variables": {
-    "build_vm_name": "windows_2012_r2_core",
-    "iso_url": "http://192.168.220.1:8080/iso/windows.iso",
+    "build_name": "windows_2012_r2",
+    "tools_iso_url": "http://192.168.220.1:8080/iso/windows.iso",
     "temp_user": "vagrant",
+    "temp_pass": "vagrant",
     "version": "2.2"
   },
   "builders": [
     {
+      "name": "standard",  
+      "vm_name": "{{user `build_name`}}",  
       "type": "vmware-windows-iso",
-      "vm_name": "{{user `build_vm_name`}}",
       "iso_url": "iso/Windows Server2012r2.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
       "headless": true,
-      "boot_wait": "6m",
-      "output_directory": "builds/{{user `build_vm_name`}}",
+      "output_directory": "builds/{{user `build_name`}}",
       "winrm_username": "{{user `temp_user`}}",
-      "winrm_password": "{{user `temp_user`}}",
+      "winrm_password": "{{user `temp_pass`}}",
       "winrm_wait_timeout": "2h",
       "shutdown_timeout": "1h",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "guest_os_type": "windows8srv-64",
       "disk_size": 32768,
       "floppy_files": [
+        "{{user `build_name`}}/Autounattend.xml",
         "files/pvscsi/*",
         "files/vmxnet3/*",
-        "windows_2012_r2_core/Autounattend.xml",
         "scripts/init.bat",
         "scripts/microsoft-updates.bat",
         "scripts/winrm-tools.ps1"
       ],
-      "vmdk_name": "windows_2012_r2_core",
+      "vmdk_name": "{{user `build_name`}}",
       "vmx_data": {
-        "memsize": "2048",
+        "memsize": "4096",
+        "numvcpus": "2",
+        "cpuid.coresPerSocket": "1",
+        "scsi0.virtualDev": "pvscsi",
+        "ethernet0.virtualdev" : "vmxnet3",
+        "virtualhw.productcompatibility" : "esx",
+        "virtualhw.version" : "10"
+      }
+    },
+    {
+      "name": "core",  
+      "vm_name": "{{user `build_name`}}_core",  
+      "type": "vmware-windows-iso",
+      "iso_url": "iso/Windows Server2012r2.iso",
+      "iso_checksum_type": "md5",
+      "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
+      "headless": false,
+      "output_directory": "builds/{{user `build_name`}}_core",
+      "winrm_username": "{{user `temp_user`}}",
+      "winrm_password": "{{user `temp_pass`}}",
+      "winrm_wait_timeout": "2h",
+      "shutdown_timeout": "1h",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "guest_os_type": "windows8srv-64",
+      "disk_size": 32768,
+      "floppy_files": [
+        "{{user `build_name`}}_core/Autounattend.xml",
+        "files/pvscsi/*",
+        "files/vmxnet3/*",
+        "scripts/init.bat",
+        "scripts/microsoft-updates.bat",
+        "scripts/winrm-tools.ps1"
+      ],
+      "vmdk_name": "{{user `build_name`}}_core",
+      "vmx_data": {
+        "memsize": "4096",
         "numvcpus": "2",
         "cpuid.coresPerSocket": "1",
         "scsi0.virtualDev": "pvscsi",
@@ -44,23 +80,33 @@
   ],
   "provisioners": [
     {
-      "type": "file",
-      "source": "iso/windows.iso",
-      "destination": "C:/Users/{{user `temp_user`}}/windows.iso"
+      "type": "powershell",
+      "inline": ["((New-Object System.Net.WebClient).DownloadFile(\"{{user `tools_iso_url`}}\", \"c:\\users\\{{user `temp_user`}}\\windows.iso\"))"]
     },
     {
       "type": "powershell",
-      "execute_command": "powershell -NoLogo -ExecutionPolicy ByPass -File \"{{.Path}} -user {{user `temp_user`}}\"",
-      "script": "scripts/install-vmware-tools-test.ps1",
-      "binary": true
+      "execute_command": "powershell.exe -ExecutionPolicy Bypass -Command \"& {{.Path}} -user {{user `temp_user`}} \"",
+      "script": "scripts/install-vmware-tools-test.ps1"
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": "Get-NetAdapter -Physical | Get-NetIPAddress -AddressFamily IPv4 | Select-Object IPAddress"
+    },
+    {
+      "type": "powershell",
+      "inline": "while ($true){Start-Sleep -s 60}"
     }
   ],
   "post-processors": [
     {
-      "type": "vagrant-vmware-ovf",
-      "keep_input_artifact": false,
+      "type": "vagrant",
+      "keep_input_artifact": true,
       "compression_level": 0,
-      "output": "{{user `build_vm_name`}}-{{.Provider}}-{{user `version`}}.box"
+      "output": "{{user `build_name`}}-{{.Provider}}-{{user `version`}}.box"
     }
   ]
 }
+
