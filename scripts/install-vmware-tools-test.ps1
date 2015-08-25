@@ -18,8 +18,8 @@ if (Test-Path $iso_path) {
         Push-Location $drive_letter
         Write-Host "VMware Tools | Start installation: $(Get-Date -Format T)"
         #$installation_process = Start-Process -FilePath '.\setup.exe' -ArgumentList '/S /v "/qn REBOOT=R ADDLOCAL=ALL"' -PassThru
-        $installation_args = "$($drive_letter)\setup.exe /S /v ""/qn REBOOT=R ADDLOCAL=ALL"""
-        $installation_process = Start-Process 'powershell.exe' -ArgumentList $installation_args -PassThru
+        $installation_args = "/c $($drive_letter)\setup.exe /S /v ""/qn REBOOT=R ADDLOCAL=ALL"""
+        $installation_process = Start-Process 'cmd.exe' -ArgumentList $installation_args -PassThru
         while (!($installation_process.HasExited)) {
             Start-Sleep -Seconds 5
         }
