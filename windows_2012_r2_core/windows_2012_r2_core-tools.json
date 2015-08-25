@@ -12,7 +12,7 @@
       "iso_url": "iso/Windows Server2012r2.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
-      "headless": false,
+      "headless": true,
       "boot_wait": "6m",
       "output_directory": "builds/{{user `build_vm_name`}}",
       "winrm_username": "{{user `temp_user`}}",
@@ -44,10 +44,15 @@
   ],
   "provisioners": [
     {
+      "type": "file",
+      "source": "iso/windows.iso",
+      "destination": "C:/Users/{{user `temp_user`}}/windows.iso"
+    },
+    {
       "type": "powershell",
-      "remote_path": "/tmp/install-vmware-tools.ps1",
-      "script": "scripts/install-vmware-tools.ps1",
-      "execute_command": "install-vmware-tools.ps1 -user {{user `temp_user`}} -iso_url {{user `iso_url`}}"
+      "execute_command": "powershell -NoLogo -ExecutionPolicy ByPass -File \"{{.Path}} -user {{user `temp_user`}}\"",
+      "script": "scripts/install-vmware-tools-test.ps1",
+      "binary": true
     }
   ],
   "post-processors": [
