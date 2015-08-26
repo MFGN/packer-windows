@@ -86,7 +86,7 @@
     },
     {
       "type": "powershell",
-      "script": "scripts/Mount-VMwareTools.ps1"
+      "script": "scripts/mount-vmtools.ps1"
     },
     {
       "type": "powershell",
@@ -96,8 +96,20 @@
     },
     {
       "type": "powershell",
-      "inline": "Get-NetAdapter -Physical | Get-NetIPAddress -AddressFamily IPv4 | Select-Object IPAddress",
-      "pause_before": "2m"
+      "pause_before": "2m",
+      "scripts": [
+        "scripts/disable-autologin.ps1",
+        "scripts/remove-httplistener.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "only": ["standard"],
+      "scripts": [
+        "scripts/enable-rdp.ps1",
+        "scripts/update-explorer.ps1",
+        "scripts/set-borderwidth.ps1"
+      ]
     },
     {
       "type": "powershell",
