@@ -24,9 +24,9 @@
       "guest_os_type": "windows8srv-64",
       "disk_size": 32768,
       "floppy_files": [
-        "{{user `build_name`}}/Autounattend.xml",
-        "files/pvscsi/*",
-        "files/vmxnet3/*",
+        "files/unattended/{{user `build_name`}}/Autounattend.xml",
+        "files/drivers/pvscsi/*",
+        "files/drivers/vmxnet3/*",
         "scripts/init.bat",
         "scripts/winrm-tools.ps1"
       ],
@@ -43,13 +43,13 @@
     },
     {
       "name": "core",
-      "vm_name": "{{user `build_name`}}_core",
+      "vm_name": "{{user `build_name`}}_test",
       "type": "vmware-windows-iso",
       "iso_url": "iso/Windows Server2012r2.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
       "headless": false,
-      "output_directory": "builds/{{user `build_name`}}_core",
+      "output_directory": "builds/{{user `build_name`}}_test",
       "winrm_username": "{{user `temp_user`}}",
       "winrm_password": "{{user `temp_pass`}}",
       "winrm_wait_timeout": "2h",
@@ -58,13 +58,13 @@
       "guest_os_type": "windows8srv-64",
       "disk_size": 32768,
       "floppy_files": [
-        "{{user `build_name`}}_core/Autounattend.xml",
-        "files/pvscsi/*",
-        "files/vmxnet3/*",
+        "files/unattended/{{user `build_name`}}_core/Autounattend.xml",
+        "files/drivers/pvscsi/*",
+        "files/drivers/vmxnet3/*",
         "scripts/init.bat",
         "scripts/winrm-tools.ps1"
       ],
-      "vmdk_name": "{{user `build_name`}}_core",
+      "vmdk_name": "{{user `build_name`}}_test",
       "vmx_data": {
         "memsize": "4096",
         "numvcpus": "2",
@@ -86,17 +86,12 @@
     },
     {
       "type": "powershell",
-      "script": "scripts/install-vmware-tools-test2.ps1"
+      "script": "scripts/install-vmware-tools.ps1"
     },
     {
       "type": "powershell",
-      "elevated_user": "{{user `temp_user`}}",
-      "elevated_password": "{{user `temp_pass`}}",
-      "inline": ["Start-Job -ScriptBlock {Start-Process (Join-Path $(((Get-Volume -FileSystemLabel VM*)[0].DriveLetter)+':') setup64.exe) -ArgumentList '/S /v /qn'} | Get-Job | Wait-Job -TimeoutSec 180"]
-    },
-    {
-      "type": "powershell",
-      "inline": "Get-NetAdapter -Physical | Get-NetIPAddress -AddressFamily IPv4 | Select-Object IPAddress"
+      "inline": "Get-NetAdapter -Physical | Get-NetIPAddress -AddressFamily IPv4 | Select-Object IPAddress",
+      "pause_before": "2m"
     },
     {
       "type": "powershell",
