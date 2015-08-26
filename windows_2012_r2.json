@@ -1,6 +1,6 @@
 {
   "variables": {
-    "build_name": "windows_2012_r2",
+    "win_version": "windows_2012_r2",
     "project_url": "http://192.168.220.1:8080",
     "temp_user": "vagrant",
     "temp_pass": "vagrant",
@@ -9,13 +9,13 @@
   "builders": [
     {
       "name": "standard",
-      "vm_name": "{{user `build_name`}}",
+      "vm_name": "{{user `win_version`}}_standard",
       "type": "vmware-windows-iso",
-      "iso_url": "iso/Windows Server2012r2.iso",
+      "iso_url": "iso/{{user `win_version`}}.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
       "headless": true,
-      "output_directory": "builds/{{user `build_name`}}",
+      "output_directory": "builds/{{user `win_version`}}_standard",
       "winrm_username": "{{user `temp_user`}}",
       "winrm_password": "{{user `temp_pass`}}",
       "winrm_wait_timeout": "2h",
@@ -24,13 +24,13 @@
       "guest_os_type": "windows8srv-64",
       "disk_size": 32768,
       "floppy_files": [
-        "files/unattended/{{user `build_name`}}/Autounattend.xml",
+        "files/unattended/{{user `win_version`}}_standard/Autounattend.xml",
         "files/drivers/pvscsi/*",
         "files/drivers/vmxnet3/*",
         "scripts/init.bat",
         "scripts/winrm-tools.ps1"
       ],
-      "vmdk_name": "{{user `build_name`}}",
+      "vmdk_name": "{{user `win_version`}}_standard",
       "vmx_data": {
         "memsize": "4096",
         "numvcpus": "2",
@@ -43,13 +43,13 @@
     },
     {
       "name": "core",
-      "vm_name": "{{user `build_name`}}_test",
+      "vm_name": "{{user `win_version`}}_core",
       "type": "vmware-windows-iso",
-      "iso_url": "iso/Windows Server2012r2.iso",
+      "iso_url": "iso/{{user `win_version`}}.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
       "headless": false,
-      "output_directory": "builds/{{user `build_name`}}_test",
+      "output_directory": "builds/{{user `win_version`}}_core",
       "winrm_username": "{{user `temp_user`}}",
       "winrm_password": "{{user `temp_pass`}}",
       "winrm_wait_timeout": "2h",
@@ -58,13 +58,13 @@
       "guest_os_type": "windows8srv-64",
       "disk_size": 32768,
       "floppy_files": [
-        "files/unattended/{{user `build_name`}}_core/Autounattend.xml",
+        "files/unattended/{{user `win_version`}}_core/Autounattend.xml",
         "files/drivers/pvscsi/*",
         "files/drivers/vmxnet3/*",
         "scripts/init.bat",
         "scripts/winrm-tools.ps1"
       ],
-      "vmdk_name": "{{user `build_name`}}_test",
+      "vmdk_name": "{{user `win_version`}}_core",
       "vmx_data": {
         "memsize": "4096",
         "numvcpus": "2",
@@ -86,13 +86,13 @@
     },
     {
       "type": "powershell",
-      "script": "scripts/install-vmware-tools-test2.ps1"
+      "script": "scripts/Mount-VMwareTools.ps1"
     },
     {
       "type": "powershell",
       "elevated_user": "{{user `temp_user`}}",
       "elevated_password": "{{user `temp_pass`}}",
-      "inline": ["Start-Job -ScriptBlock {Start-Process (Join-Path $(((Get-Volume -FileSystemLabel VM*)[0].DriveLetter)+':') setup64.exe) -ArgumentList '/S /v /qn'} | Wait-Job -TimeoutSec 120"]
+      "inline": ["Start-Job -ScriptBlock {Start-Process (Join-Path $(((Get-Volume -FileSystemLabel VM*)[0].DriveLetter)+':') setup64.exe) -ArgumentList '/S /v /qn'} | Wait-Job -TimeoutSec 120 | Out-Null"]
     },
     {
       "type": "powershell",
@@ -106,10 +106,10 @@
   ],
   "post-processors": [
     {
-      "type": "vagrant",
+      "type": "vagrant-vmware-ovf",
       "keep_input_artifact": true,
       "compression_level": 0,
-      "output": "{{user `build_name`}}-{{.Provider}}-{{user `version`}}.box"
+      "output": "{{user `win_version`}}_{{.BuildName}}-{{.Provider}}-{{user `version`}}.box"
     }
   ]
 }
