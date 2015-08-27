@@ -14,7 +14,7 @@
       "iso_url": "iso/{{user `win_version`}}.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
-      "headless": true,
+      "headless": false,
       "output_directory": "builds/{{user `win_version`}}_standard",
       "winrm_username": "{{user `temp_user`}}",
       "winrm_password": "{{user `temp_pass`}}",
