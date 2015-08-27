@@ -1,2 +1,12 @@
-﻿&netsh http delete iplisten ipaddress=127.0.0.1
-exit 0
+﻿$listeners =@(
+    "127.0.0.1",
+    "localhost"
+)
+
+$netsh_config = & {netsh http show iplisten}
+
+$listeners | % {
+    if ($netsh_config -match $_) {
+        & {netsh http delete iplisten ipaddress=$_}
+    }
+}

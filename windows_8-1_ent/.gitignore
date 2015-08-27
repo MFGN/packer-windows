@@ -10,6 +10,7 @@ boxes/*
 /vagrant-spec.config.rb
 
 # Bundler/Rubygems
+Autounattend.xml
 *.gem
 .bundle
 pkg/*

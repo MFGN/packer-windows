@@ -25,19 +25,15 @@
     }
 )
 
-if ((Get-PSDrive -PSProvider Registry).Root -notcontains 'HKEY_USERS')
-{
+if ((Get-PSDrive -PSProvider Registry).Root -notcontains 'HKEY_USERS') {
     New-PSDrive -Name HKU -PSProvider Registry -Root HKEY_USERS
 }
 
-ForEach ($Item in $RegistryKeys)
-{
-    if ((Get-ItemProperty $Item.Path) -like "*$($Item.Name)*")
-    {
+ForEach ($Item in $RegistryKeys) {
+    if ((Get-ItemProperty $Item.Path) -match $Item.Name) {
         Set-ItemProperty -Path $Item.Path -Name $Item.Name -Value $Item.RegValue -Type $Item.RegType -Force
     }
-    else
-    {
+    else {
         New-ItemProperty -Path $Item.Path -Name $Item.Name -Value $Item.RegValue -Type $Item.RegType -Force
     }
 }

@@ -96,6 +96,8 @@
     },
     {
       "type": "powershell",
+      "elevated_user": "{{user `temp_user`}}",
+      "elevated_password": "{{user `temp_pass`}}",
       "pause_before": "2m",
       "scripts": [
         "scripts/disable-autologin.ps1",
@@ -110,6 +112,9 @@
         "scripts/update-explorer.ps1",
         "scripts/set-borderwidth.ps1"
       ]
+    },
+    {
+      "type": "windows-restart"
     },
     {
       "type": "powershell",
