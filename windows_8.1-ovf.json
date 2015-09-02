@@ -1,21 +1,21 @@
 {
   "variables": {
-    "win_version": "windows_8.1_ent",
-    "project_url": "http://192.168.220.1:8080",
+    "win_version": "windows_8.1",
+    "project_url": "http://192.168.80.1:8080",
     "temp_user": "vagrant",
     "temp_pass": "vagrant",
-    "version": "1"
+    "version": "0.1"
   },
   "builders": [
     {
-      "name": "standard",
-      "vm_name": "{{user `win_version`}}",
+      "name": "enterprise",
+      "vm_name": "{{user `win_version`}}_ent",
       "type": "vmware-windows-iso",
-      "iso_url": "iso/{{user `win_version`}}.iso",
+      "iso_url": "iso/{{user `win_version`}}_ent.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "8E194185FCCE4EA737F274EE9005DDF0",
       "headless": false,
-      "output_directory": "builds/{{user `win_version`}}",
+      "output_directory": "builds/{{user `win_version`}}_ent",
       "winrm_username": "{{user `temp_user`}}",
       "winrm_password": "{{user `temp_pass`}}",
       "winrm_wait_timeout": "2h",
@@ -24,13 +24,13 @@
       "guest_os_type": "windows8srv-64",
       "disk_size": 32768,
       "floppy_files": [
-        "files/unattended/{{user `win_version`}}/Autounattend.xml",
+        "files/unattended/{{user `win_version`}}_ent/Autounattend.xml",
         "files/drivers/pvscsi/*",
         "files/drivers/vmxnet3/*",
         "scripts/init.bat",
         "scripts/winrm-tools.ps1"
       ],
-      "vmdk_name": "{{user `win_version`}}",
+      "vmdk_name": "{{user `win_version`}}_ent",
       "vmx_data": {
         "memsize": "4096",
         "numvcpus": "2",
