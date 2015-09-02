@@ -1,0 +1,94 @@
+{
+  "variables": {
+    "win_version": "windows_8.1_ent",
+    "project_url": "http://192.168.220.1:8080",
+    "temp_user": "vagrant",
+    "temp_pass": "vagrant",
+    "version": "1"
+  },
+  "builders": [
+    {
+      "name": "standard",
+      "vm_name": "{{user `win_version`}}",
+      "type": "vmware-windows-iso",
+      "iso_url": "iso/{{user `win_version`}}.iso",
+      "iso_checksum_type": "md5",
+      "iso_checksum": "8E194185FCCE4EA737F274EE9005DDF0",
+      "headless": false,
+      "output_directory": "builds/{{user `win_version`}}",
+      "winrm_username": "{{user `temp_user`}}",
+      "winrm_password": "{{user `temp_pass`}}",
+      "winrm_wait_timeout": "2h",
+      "shutdown_timeout": "1h",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "guest_os_type": "windows8srv-64",
+      "disk_size": 32768,
+      "floppy_files": [
+        "files/unattended/{{user `win_version`}}/Autounattend.xml",
+        "files/drivers/pvscsi/*",
+        "files/drivers/vmxnet3/*",
+        "scripts/init.bat",
+        "scripts/winrm-tools.ps1"
+      ],
+      "vmdk_name": "{{user `win_version`}}",
+      "vmx_data": {
+        "memsize": "4096",
+        "numvcpus": "2",
+        "cpuid.coresPerSocket": "1",
+        "scsi0.virtualDev": "pvscsi",
+        "ethernet0.virtualdev" : "vmxnet3",
+        "virtualhw.productcompatibility" : "esx",
+        "virtualhw.version" : "10"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": ["((New-Object System.Net.WebClient).DownloadFile(\"{{user `project_url`}}/iso/windows.iso\", \"c:\\users\\{{user `temp_user`}}\\windows.iso\"))"]
+    },
+    {
+      "type": "powershell",
+      "script": "scripts/mount-vmtools.ps1"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `temp_user`}}",
+      "elevated_password": "{{user `temp_pass`}}",
+      "inline": ["Start-Job -ScriptBlock {Start-Process (Join-Path $(((Get-Volume -FileSystemLabel VM*)[0].DriveLetter)+':') setup64.exe) -ArgumentList '/S /v /qn'} | Wait-Job -TimeoutSec 120 | Out-Null"]
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `temp_user`}}",
+      "elevated_password": "{{user `temp_pass`}}",
+      "pause_before": "2m",
+      "scripts": [
+        "scripts/disable-autologin.ps1",
+        "scripts/remove-httplistener.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "scripts": [
+        "scripts/enable-rdp.ps1",
+        "scripts/update-explorer.ps1",
+        "scripts/remove-metroapps.ps1",
+        "scripts/set-borderwidth.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant-vmware-ovf",
+      "keep_input_artifact": false,
+      "compression_level": 0,
+      "output": "{{user `win_version`}}_{{.BuildName}}-{{.Provider}}-{{user `version`}}.box"
+    }
+  ]
+}
