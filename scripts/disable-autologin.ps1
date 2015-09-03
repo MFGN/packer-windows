@@ -1,4 +1,4 @@
-$RegistryKeys = @(
+$RegistryValues = @(
     [pscustomobject]@{
         'Name' = "AutoAdminLogon"
         'Path' = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\"
@@ -7,11 +7,8 @@ $RegistryKeys = @(
     }
 )
 
-ForEach ($Item in $RegistryKeys) {
-    if ((Get-ItemProperty $Item.Path) -match $Item.Name) {
-        Set-ItemProperty -Path $Item.Path -Name $Item.Name -Value $Item.RegValue -Type $Item.RegType -Force
-    }
-    else {
-        New-ItemProperty -Path $Item.Path -Name $Item.Name -Value $Item.RegValue -Type $Item.RegType -Force
-    }
+if (!(Get-Module -Name RegTools)) {
+    Import-Module "C:\Windows\System32\WindowsPowerShell\v1.0\Modules\RegTools"
 }
+
+Import-RegData -RegistryValues $RegistryValues -Verbose

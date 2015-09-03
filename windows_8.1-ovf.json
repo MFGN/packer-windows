@@ -1,10 +1,10 @@
 {
   "variables": {
     "win_version": "windows_8.1",
-    "project_url": "http://192.168.80.1:8080",
+    "project_url": "http://192.168.220.1:8080",
     "temp_user": "vagrant",
     "temp_pass": "vagrant",
-    "version": "0.1"
+    "version": "0.2"
   },
   "builders": [
     {
@@ -58,21 +58,17 @@
       "type": "powershell",
       "elevated_user": "{{user `temp_user`}}",
       "elevated_password": "{{user `temp_pass`}}",
-      "inline": ["Start-Job -ScriptBlock {Start-Process (Join-Path $(((Get-Volume -FileSystemLabel VM*)[0].DriveLetter)+':') setup64.exe) -ArgumentList '/S /v /qn'} | Wait-Job -TimeoutSec 120 | Out-Null"]
-    },
-    {
-      "type": "powershell",
-      "elevated_user": "{{user `temp_user`}}",
-      "elevated_password": "{{user `temp_pass`}}",
-      "pause_before": "2m",
-      "scripts": [
-        "scripts/disable-autologin.ps1",
-        "scripts/remove-httplistener.ps1"
+      "inline": [
+        "New-Item -Path 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\Modules\\RegTools' -ItemType Directory",
+        "((New-Object System.Net.WebClient).DownloadFile(\"{{user `project_url`}}/scripts/RegTools.psm1\", \"C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules\\RegTools\\RegTools.psm1\"))",
+        "Start-Job -ScriptBlock {Start-Process (Join-Path $(((Get-Volume -FileSystemLabel VM*)[0].DriveLetter)+':') setup64.exe) -ArgumentList '/S /v /qn'} | Wait-Job -TimeoutSec 120 | Out-Null"
       ]
     },
     {
       "type": "powershell",
+      "pause_before": "3m",
       "scripts": [
+        "scripts/set-msupdates.ps1",
         "scripts/enable-rdp.ps1",
         "scripts/update-explorer.ps1",
         "scripts/remove-metroapps.ps1",
@@ -81,6 +77,10 @@
     },
     {
       "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": "while ($true){Start-Sleep -s 60}"
     }
   ],
   "post-processors": [
