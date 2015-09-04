@@ -9,6 +9,23 @@
         $RegistryValues
     )
     begin {
+        function Set-RegistryDrive {
+            param (
+                [string]$Path
+            )
+            $drive = switch (($Path.Split(':'))[0]) {
+                'HKCU' {'HKEY_CURRENT_USER'}
+                'HKLM' {'HKEY_LOCAL_MACHINE'}
+                'HKCC' {'HKEY_CURRENT_CONFIG'}
+                'HKCR' {'HKEY_CLASSES_ROOT'}
+                'HKU' {'HKEY_USERS'}    
+            }
+            if ($drive) {
+                if ((Get-PSDrive -PSProvider Registry).Root -notcontains $drive) {
+                    New-PSDrive -Name HKU -PSProvider Registry -Root Registry::$drive -Scope 1 | Out-Null
+                }
+            }
+        }
         $ErrorRecord = New-Object System.Collections.ArrayList
     }
     process {
@@ -16,6 +33,7 @@
             foreach ($reg_key in $RegistryKeys) {
                 Write-Verbose "$(Get-Date -format 'dd/MM/yyyy HH:mm:ss')    Keys: Processing: $($reg_key.Name)"
                 try {
+                    Set-RegistryDrive -Path $reg_key.Path
                     if (!((Get-ChildItem $reg_key.Path -ErrorAction SilentlyContinue) -match $reg_key.Name)) {
                         Write-Verbose "$(Get-Date -format 'dd/MM/yyyy HH:mm:ss')    Keys: Setting: $($reg_key.Name)"
                         New-Item -Path $reg_key.Path -Name $reg_key.Name -Force | Out-Null
@@ -31,6 +49,7 @@
             foreach ($reg_value in $RegistryValues) {
                 Write-Verbose "$(Get-Date -format 'dd/MM/yyyy HH:mm:ss')    Values: Processing: $($reg_value.Name)"
                 try {
+                    Set-RegistryDrive -Path $reg_value.Path
                     if ((Get-ItemProperty $reg_value.Path) -match $reg_value.Name) {
                         Write-Verbose "$(Get-Date -format 'dd/MM/yyyy HH:mm:ss')    Values: Setting: $($reg_value.Name)"
                         Set-ItemProperty -Path $reg_value.Path -Name $reg_value.Name -Value $reg_value.RegValue -Type $reg_value.RegType -Force | Out-Null

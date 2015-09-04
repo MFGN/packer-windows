@@ -72,7 +72,8 @@
         "scripts/enable-rdp.ps1",
         "scripts/update-explorer.ps1",
         "scripts/remove-metroapps.ps1",
-        "scripts/set-borderwidth.ps1"
+        "scripts/set-borderwidth.ps1",
+        "scripts/set-highperformance.ps1"
       ]
     },
     {

@@ -25,12 +25,8 @@
     }
 )
 
-if ((Get-PSDrive -PSProvider Registry).Root -notcontains 'HKEY_USERS') {
-    New-PSDrive -Name HKU -PSProvider Registry -Root Registry::HKEY_USERS | Out-Null
-}
-
 if (!(Get-Module -Name RegTools)) {
     Import-Module "C:\Windows\System32\WindowsPowerShell\v1.0\Modules\RegTools"
 }
 
-Import-RegData -RegistryValues $RegistryValues -Verbose
+Import-RegData -RegistryValues $RegistryValues

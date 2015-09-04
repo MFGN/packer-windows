@@ -1,13 +1,13 @@
 ﻿$RegistryValues = @(
     [pscustomobject]@{
         'Name' = "EnableFeaturedSoftware"
-        'Path' = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\"
+        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell\EdgeUi\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "IncludeRecommendedUpdates"
-        'Path' = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\"
+        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell\EdgeUi\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
