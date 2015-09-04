@@ -66,14 +66,15 @@
     },
     {
       "type": "powershell",
-      "pause_before": "3m",
+      "pause_before": "2m",
       "scripts": [
         "scripts/set-msupdates.ps1",
         "scripts/enable-rdp.ps1",
         "scripts/update-explorer.ps1",
         "scripts/remove-metroapps.ps1",
         "scripts/set-borderwidth.ps1",
-        "scripts/set-highperformance.ps1"
+        "scripts/set-highperformance.ps1",
+        "scripts/set-taskbar.ps1"
       ]
     },
     {
