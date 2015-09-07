@@ -82,7 +82,10 @@
     },
     {
       "type": "powershell",
-      "inline": "while ($true){Start-Sleep -s 60}"
+      "inline": [
+        "Remove-Item \"c:\\users\\{{user `temp_user`}}\\windows.iso\" -Force"
+        "while ($true){Start-Sleep -s 60}"
+      ]
     }
   ],
   "post-processors": [

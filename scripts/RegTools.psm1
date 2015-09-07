@@ -36,7 +36,10 @@
                     Set-RegistryDrive -Path $reg_key.Path
                     if (!((Get-ChildItem $reg_key.Path -ErrorAction SilentlyContinue) -match $reg_key.Name)) {
                         Write-Verbose "$(Get-Date -format 'dd/MM/yyyy HH:mm:ss')    Keys: Setting: $($reg_key.Name)"
-                        New-Item -Path $reg_key.Path -Name $reg_key.Name -Force | Out-Null
+                        if ($reg_key.Path -notmatch '\\$') {
+                            $reg_key.Path = $reg_key.Path+'\'
+                        }
+                        New-Item -Path $($reg_key.Path+$reg_key.Name) -Force | Out-Null
                     }
                 }
                 catch {

@@ -2,32 +2,34 @@
     [pscustomobject]@{
         'Name' = "Accent"
         'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\"
-        'ItemType' = "Directory"
     },
     [pscustomobject]@{
         'Name' = "Accent"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\Explorer\"
-        'ItemType' = "Directory"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\"
     },
     [pscustomobject]@{
         'Name' = "Advanced"
         'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\"
-        'ItemType' = "Directory"
     },
     [pscustomobject]@{
         'Name' = "Advanced"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\Explorer\"
-        'ItemType' = "Directory"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\"
     },
     [pscustomobject]@{
         'Name' = "EdgeUi"
         'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell\"
-        'ItemType' = "Directory"
     },
     [pscustomobject]@{
         'Name' = "EdgeUi"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell\"
-        'ItemType' = "Directory"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell\"
+    },
+    [pscustomobject]@{
+        'Name' = "StartPage"
+        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\"
+    },
+    [pscustomobject]@{
+        'Name' = "StartPage"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\"
     }
 )
 
@@ -40,7 +42,7 @@ $RegistryValues = @(
     },
     [pscustomobject]@{
         'Name' = "DisableTRCorner"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell\EdgeUi\"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell\EdgeUi\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
@@ -52,79 +54,79 @@ $RegistryValues = @(
     },
     [pscustomobject]@{
         'Name' = "DisableTLCorner"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell\EdgeUi\"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell\EdgeUi\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "MotionAccentId_v1.00"
         'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
-        'RegValue' = 'db'
+        'RegValue' = 219
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "MotionAccentId_v1.00"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
-        'RegValue' = 'db'
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'RegValue' = 219
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "OpenAtLogon"
-        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 0
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "OpenAtLogon"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 0
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "MonitorOverride"
-        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "MonitorOverride"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "MakeAllAppsDefault"
-        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "MakeAllAppsDefault"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "GlobalSearchInApps"
-        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "GlobalSearchInApps"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "DesktopFirst"
-        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
     [pscustomobject]@{
         'Name' = "DesktopFirst"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent\"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage\"
         'RegValue' = 1
         'RegType' = 'DWord'
     },
@@ -136,7 +138,7 @@ $RegistryValues = @(
     },
     [pscustomobject]@{
         'Name' = "TaskbarSmallIcons"
-        'Path' = "HKU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\"
+        'Path' = "HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\"
         'RegValue' = 1
         'RegType' = 'DWord'
     }
