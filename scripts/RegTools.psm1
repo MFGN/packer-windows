@@ -22,7 +22,7 @@
             }
             if ($drive) {
                 if ((Get-PSDrive -PSProvider Registry).Root -notcontains $drive) {
-                    New-PSDrive -Name HKU -PSProvider Registry -Root Registry::$drive -Scope 1 | Out-Null
+                    New-PSDrive -Name $Path -PSProvider Registry -Root Registry::$drive -Scope 1 | Out-Null
                 }
             }
         }

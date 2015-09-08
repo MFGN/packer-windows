@@ -4,7 +4,7 @@
     "project_url": "http://192.168.220.1:8080",
     "temp_user": "vagrant",
     "temp_pass": "vagrant",
-    "version": "0.2"
+    "version": "0.3"
   },
   "builders": [
     {
@@ -18,7 +18,7 @@
       "output_directory": "builds/{{user `win_version`}}_ent",
       "winrm_username": "{{user `temp_user`}}",
       "winrm_password": "{{user `temp_pass`}}",
-      "winrm_wait_timeout": "2h",
+      "winrm_wait_timeout": "6h",
       "shutdown_timeout": "1h",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "guest_os_type": "windows8srv-64",
@@ -28,6 +28,7 @@
         "files/drivers/pvscsi/*",
         "files/drivers/vmxnet3/*",
         "scripts/init.bat",
+        "scripts/update-windows.ps1",
         "scripts/winrm-tools.ps1"
       ],
       "vmdk_name": "{{user `win_version`}}_ent",
@@ -82,10 +83,7 @@
     },
     {
       "type": "powershell",
-      "inline": [
-        "Remove-Item \"c:\\users\\{{user `temp_user`}}\\windows.iso\" -Force"
-        "while ($true){Start-Sleep -s 60}"
-      ]
+      "inline": ["Remove-Item \"c:\\users\\{{user `temp_user`}}\\windows.iso\" -Force"]
     }
   ],
   "post-processors": [

@@ -62,7 +62,8 @@
         "files/drivers/pvscsi/*",
         "files/drivers/vmxnet3/*",
         "scripts/init.bat",
-        "scripts/winrm-tools.ps1"
+        "scripts/winrm-tools.ps1",
+        "scripts/update-windows.ps1"
       ],
       "vmdk_name": "{{user `win_version`}}_core",
       "vmx_data": {
