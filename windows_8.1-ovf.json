@@ -28,7 +28,6 @@
         "files/drivers/pvscsi/*",
         "files/drivers/vmxnet3/*",
         "scripts/init.bat",
-        "scripts/update-windows.ps1",
         "scripts/winrm-tools.ps1"
       ],
       "vmdk_name": "{{user `win_version`}}_ent",
@@ -41,7 +40,41 @@
         "virtualhw.productcompatibility" : "esx",
         "virtualhw.version" : "10"
       }
+    },
+    {
+    "name": "professional",
+    "vm_name": "{{user `win_version`}}_pro",
+    "type": "vmware-windows-iso",
+    "iso_url": "iso/{{user `win_version`}}_pro.iso",
+    "iso_checksum_type": "md5",
+    "iso_checksum": "99b2f84dc9f63aaf5e7738e479dff40a",
+    "headless": false,
+    "output_directory": "builds/{{user `win_version`}}_pro",
+    "winrm_username": "{{user `temp_user`}}",
+    "winrm_password": "{{user `temp_pass`}}",
+    "winrm_wait_timeout": "6h",
+    "shutdown_timeout": "1h",
+    "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+    "guest_os_type": "windows8srv-64",
+    "disk_size": 32768,
+    "floppy_files": [
+      "files/unattended/{{user `win_version`}}_pro/Autounattend.xml",
+      "files/drivers/pvscsi/*",
+      "files/drivers/vmxnet3/*",
+      "scripts/init.bat",
+      "scripts/winrm-tools.ps1"
+    ],
+    "vmdk_name": "{{user `win_version`}}_pro",
+    "vmx_data": {
+      "memsize": "4096",
+      "numvcpus": "2",
+      "cpuid.coresPerSocket": "1",
+      "scsi0.virtualDev": "pvscsi",
+      "ethernet0.virtualdev" : "vmxnet3",
+      "virtualhw.productcompatibility" : "esx",
+      "virtualhw.version" : "10"
     }
+  }
   ],
   "provisioners": [
     {

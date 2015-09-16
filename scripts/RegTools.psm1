@@ -13,16 +13,17 @@
             param (
                 [string]$Path
             )
-            $drive = switch (($Path.Split(':'))[0]) {
+            $path_split = $Path.Split(':')[0]
+            $drive = switch ($path_split) {
                 'HKCU' {'HKEY_CURRENT_USER'}
                 'HKLM' {'HKEY_LOCAL_MACHINE'}
                 'HKCC' {'HKEY_CURRENT_CONFIG'}
                 'HKCR' {'HKEY_CLASSES_ROOT'}
-                'HKU' {'HKEY_USERS'}    
+                'HKU' {'HKEY_USERS'}
             }
             if ($drive) {
                 if ((Get-PSDrive -PSProvider Registry).Root -notcontains $drive) {
-                    New-PSDrive -Name $Path -PSProvider Registry -Root Registry::$drive -Scope 1 | Out-Null
+                    New-PSDrive -Name $path_split -PSProvider Registry -Root Registry::$drive -Scope 1 | Out-Null
                 }
             }
         }
@@ -65,7 +66,7 @@
                 catch {
                     Write-Warning "Error setting $($reg_value.Name): $($_.Exception.Message)"
                     $ErrorRecord.add($reg_value) | Out-Null
-                } 
+                }
             }
         }
     }
