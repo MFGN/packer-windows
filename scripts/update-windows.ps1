@@ -1,16 +1,16 @@
 ﻿param($global:RestartRequired=0,
         $global:MoreUpdates=0,
         $global:MaxCycles=5,
-        $MaxUpdatesPerCycle=500)
+        $MaxUpdatesPerCycle=500,
+        $DoneScript='')
 
-$host.ui.RawUI.WindowTitle = "update-windows.ps1"
-
-$Logfile = "C:\Windows\Temp\win-updates.log"
+#$Logfile = "c:\Windows\Temp\win-updates.log"
+$Host.UI.RawUI.WindowTitle = "Run Windows Updates"
 
 function LogWrite {
    Param ([string]$logstring)
-   $now = Get-Date -format s
-   Add-Content $Logfile -value "$now $logstring"
+#   $now = Get-Date -format s
+#   Add-Content $Logfile -value "$now $logstring"
    Write-Host $logstring
 }
 
@@ -29,36 +29,26 @@ function Check-ContinueRestartOrEnd() {
             Check-WindowsUpdates
 
             if (($global:MoreUpdates -eq 1) -and ($script:Cycles -le $global:MaxCycles)) {
-                #LogWrite "Stopping BvSshServer"
-                #Stop-Service BvSshServer
-                #Set-Service -Name BvSshServer -StartupType Disabled -Status Stopped 
                 Install-WindowsUpdates
             } elseif ($script:Cycles -gt $global:MaxCycles) {
                 LogWrite "Exceeded Cycle Count - Stopping"
-                #Invoke-Expression "a:\openssh.ps1 -AutoStart"
-                LogWrite "Starting BvSshServer"
-                Set-Service -Name BvSshServer -StartupType Automatic -Status Running 
+                Invoke-Expression "$($DoneScript)"
             } else {
                 LogWrite "Done Installing Windows Updates"
-                #Invoke-Expression "a:\openssh.ps1 -AutoStart"
-                LogWrite "Starting BvSshServer"
-                Set-Service -Name BvSshServer -StartupType Automatic -Status Running 
+                Invoke-Expression "$($DoneScript)"
             }
         }
         1 {
             $prop = (Get-ItemProperty $RegistryKey).$RegistryEntry
             if (-not $prop) {
                 LogWrite "Restart Registry Entry Does Not Exist - Creating It"
-                Set-ItemProperty -Path $RegistryKey -Name $RegistryEntry -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File $($script:ScriptPath) -MaxUpdatesPerCycle $($MaxUpdatesPerCycle)"
+                Set-ItemProperty -Path $RegistryKey -Name $RegistryEntry -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File $($script:ScriptPath) -MaxUpdatesPerCycle $($MaxUpdatesPerCycle) -DoneScript $($DoneScript)"
             } else {
                 LogWrite "Restart Registry Entry Exists Already"
             }
-            LogWrite "Scheduling Reboot..."
-	        start-process -FilePath 'shutdown' -ArgumentList '/r /t 8 /f /d p:4:1 /c "Windows Update First Reboot"' -verb RunAs
-	        LogWrite "Setting BvSshServer to manual start"
-            Set-Service -Name BvSshServer -StartupType Manual
-	        LogWrite "Stopping BvSshServer"
-            Stop-Service -Name BvSshServer
+
+            LogWrite "Restart Required - Restarting..."
+            Restart-Computer
         }
         default {
             LogWrite "Unsure If A Restart Is Required"
@@ -137,9 +127,7 @@ function Install-WindowsUpdates() {
         LogWrite 'No updates available to install...'
         $global:MoreUpdates=0
         $global:RestartRequired=0
-        #Invoke-Expression "a:\openssh.ps1 -AutoStart"
-        write-host "Starting BvSshServer"
-        Set-Service -Name BvSshServer -StartupType Automatic -Status Running
+        Invoke-Expression "$($DoneScript)"
         break
     }
 
