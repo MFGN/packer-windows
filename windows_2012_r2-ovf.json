@@ -63,6 +63,7 @@
         "files/drivers/pvscsi/*",
         "files/drivers/vmxnet3/*",
         "scripts/init.bat",
+        "scripts/stop-winrm.ps1",
         "scripts/update-windows.ps1",
         "scripts/winrm-tools.ps1"
       ],
@@ -134,7 +135,7 @@
       "type": "vagrant-vmware-ovf",
       "keep_input_artifact": false,
       "compression_level": 0,
-      "output": "{{user `win_version`}}_{{.BuildName}}-{{.Provider}}-{{user `version`}}.box"
+      "output": "builds/{{user `win_version`}}_{{.BuildName}}-{{.Provider}}-{{user `version`}}.box"
     }
   ]
 }
