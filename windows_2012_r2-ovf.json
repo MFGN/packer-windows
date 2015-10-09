@@ -49,7 +49,7 @@
       "iso_url": "iso/{{user `win_version`}}.iso",
       "iso_checksum_type": "md5",
       "iso_checksum": "0E7C09AAB20DEC3CD7EAB236DAB90E78",
-      "headless": true,
+      "headless": false,
       "output_directory": "builds/{{user `win_version`}}_core",
       "winrm_username": "{{user `temp_user`}}",
       "winrm_password": "{{user `temp_pass`}}",
@@ -63,8 +63,8 @@
         "files/drivers/pvscsi/*",
         "files/drivers/vmxnet3/*",
         "scripts/init.bat",
-        "scripts/winrm-tools.ps1",
-        "scripts/update-windows.ps1"
+        "scripts/update-windows.ps1",
+        "scripts/winrm-tools.ps1"
       ],
       "vmdk_name": "{{user `win_version`}}_core",
       "vmx_data": {
@@ -101,21 +101,24 @@
 	  ]
     },
     {
+      "type": "windows-restart",
+      "pause_before": "3m"
+    },
+    {
       "type": "powershell",
       "elevated_user": "{{user `temp_user`}}",
       "elevated_password": "{{user `temp_pass`}}",
-      "pause_before": "2m",
       "scripts": [
-        "scripts/disable-autologin.ps1",
         "scripts/remove-httplistener.ps1",
-		"scripts/set-highperformance.ps1",
 		"scripts/set-numlock.ps1"
       ]
-    },
+    },    
     {
       "type": "powershell",
       "only": ["standard"],
       "scripts": [
+        "scripts/set-highperformance.ps1",
+        "scripts/disable-autologin.ps1",
         "scripts/enable-rdp.ps1",
         "scripts/update-explorer.ps1",
         "scripts/set-borderwidth.ps1",

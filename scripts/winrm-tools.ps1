@@ -7,14 +7,16 @@ if (($id -eq $null) -and (Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Window
     New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -name LocalAccountTokenFilterPolicy -value 1 -propertyType dword
 }
 
-Enable-PSRemoting -Force
-
-if ((Get-Service -Name WinRM).Status -notlike "Stopped")
-{
+if ((Get-Service -Name WinRM).Status -notlike "Stopped") {
     &net stop winrm
+    Enable-PSRemoting -Force
 }
 
-Set-Service -Name WinRM -StartupType Automatic
+
+Enable-PSRemoting -Force
+
+
+#Set-Service -Name WinRM -StartupType Automatic
 
 # Enable and configure WinRM (see below)
 &winrm quickconfig `-q

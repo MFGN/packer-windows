@@ -1,0 +1,1 @@
+﻿&"packer build --only=core --var-file=vars-windows_2012_r2.json windows_2012_r2-ovf.json"
