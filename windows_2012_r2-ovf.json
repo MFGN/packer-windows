@@ -98,7 +98,7 @@
       "inline": [
 	    "New-Item -Path 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\Modules\\RegTools' -ItemType Directory",
         "((New-Object System.Net.WebClient).DownloadFile(\"{{user `project_url`}}/scripts/RegTools.psm1\", \"C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules\\RegTools\\RegTools.psm1\"))",
-	    "Start-Job -ScriptBlock {Start-Process (Join-Path $(((Get-Volume -FileSystemLabel VM*)[0].DriveLetter)+':') setup64.exe) -ArgumentList '/S /v /qn'} | Wait-Job -TimeoutSec 120 | Out-Null"
+	    "Start-Job -ScriptBlock {Start-Process (Join-Path $(((Get-Volume -FileSystemLabel VM*)[0].DriveLetter)+':') setup64.exe) -ArgumentList '/S /v /qn' -PassThru} | Wait-Job -TimeoutSec 120 | Out-Null"
 	  ]
     },
     {
